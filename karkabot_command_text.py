@@ -126,26 +126,43 @@ ELITE2LIST = ['Weaver','Holosmith','Firebrand','Mirage','Scourge','Soulbeast','R
 ELEBUILDS = []
 TEMPESTBUILDS = ['CondiTempest', 'HealTempest', 'PowerTempest']
 WEAVERBUILDS = ['CondiWeaver', 'HybridWeaver', 'PowerWeaver']
+
+#Engineer Builds
 ENGINEERBUILDS = ['HandKiteEngineer']
 SCRAPPERBUILDS = ['HealQuickScrapper', 'PowerScrapper', 'QuickScrapper']
 HOLOSMITHBUILDS = ['CondiHolo', 'PowerSwordHolo']
+
+#Guardian Builds
 GUARDIANBUILDS = ['PowerGuardian']
 DRAGONHUNTERBUILDS = ['PowerDH']
 FIREBRANDBUILDS = ['Healbrand', 'CondiFirebrand', 'condiquickbrand', 'Bluetank']
+
+#Mesmer Builds
 MESMERBUILDS = []
 CHRONOMANCERBUILDS = ['PowerChrono', 'Purpletank']
 MIRAGEBUILDS = ['StaffMirage', 'CondiMirage']
+
+#Necromancer Builds
 NECROBUILDS = []
 REAPERBUILDS = ['CondiReaper', 'PowerReaper']
 SCOURGEBUILDS = ['CondiScourge', 'HealScourge', 'PylonKiteScourge']
+
+#Ranger Builds
 RANGERBUILDS = []
 DRUIDBUILDS = ['CondiDruid','HealDruid']
 SOULBEASTBUILDS = ['CondiSB', 'HandKiteSB', 'HybridSB', 'PowerSB']
+
+#Revenant Builds
 REVBUILDS = []
 HERALDBUILDS = ['HandkiteHerald', 'PowerHerald']
 RENEGADEBUILDS = ['CondiRen', 'AlacRen']
+
+#Thief Builds
 DDBUILDS = ['CondiDD', 'PowerDD']
 DEADEYEBUILDS = ['QadimKiteDE', 'QTPKiteDE', 'RifleDeadeye']
+THIEFBUILDS = []
+
+#Warrior Builds
 WARBUILDS = []
 BERSERKERBUILDS = ['CondiBanners', 'PowerBanners', 'PowerBerserker']
 SPELLBREAKERBUILDS = ['HandKiteSpellbreaker', 'PowerBannerSpellbreaker']
