@@ -389,5 +389,5 @@ class Raid_Builds(commands.Cog):
       embed.add_field(name="No builds available", value="Check back later, or try another command.")
     return embed
 
-def setup(bot):
-  bot.add_cog(Raid_Builds(bot))
+async def setup(bot):
+  await bot.add_cog(Raid_Builds(bot))

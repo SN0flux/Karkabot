@@ -1,17 +1,56 @@
 import discord
 from decouple import config
-import random
+import requests, random, asyncio, datetime
 import karkabot_command_text as kbc
 from discord.ext import commands
 import os
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 
 initial_extensions = ["karkabot_bosses", "karkabot_builds", "karkabot_dailies"]
 
 DESCRIPTION = 'Karka Bot for skittering and assisting during GW2 Raids.'
 bot = commands.Bot(command_prefix='$', description=DESCRIPTION, intents=intents, case_insensitive=True)
+
+
+def next_wednesday(d):
+    days_ahead = 2 - d.weekday()
+    if days_ahead <= 0: # Target day already happened this week
+        days_ahead += 7
+    return d + datetime.timedelta(days_ahead)
+
+## FIX THIS FOR YEARS, VALID ONLY 2023
+def get_com_emboldened(week_number):
+  week_number = week_number%7
+  if week_number == 0:
+    com = "w7"
+    emb = "w6"
+    return com, emb
+  elif week_number == 1:
+    com = "w1"
+    emb = "w7"
+    return com, emb
+  elif week_number == 2:
+    com = "w2"
+    emb = "w1"
+    return com, emb
+  elif week_number == 3:
+    com = "w3"
+    emb = "w2"
+    return com, emb
+  elif week_number == 4:
+    com = "w4"
+    emb = "w3"
+    return com, emb
+  elif week_number == 5:
+    com = "w5"
+    emb = "w4"
+    return com, emb
+  elif week_number == 6:
+    com = "w6"
+    emb = "w5"
+    return com, emb
 
 @commands.command(hidden=True)
 async def load(extension_name : str):
@@ -28,6 +67,49 @@ async def unload(extension_name : str):
   """Unloads an extension."""
   bot.unload_extension(extension_name)
   await bot.say("{} unloaded.".format(extension_name))
+
+@bot.command(hidden=True, aliases=['quaggan'])
+async def randomQuaggan(ctx):
+  r = requests.get('https://api.guildwars2.com/v2/quaggans')
+  response = r.json()
+  quagganSelectionInt = random.randrange(0, len(response))
+  await ctx.send(f"https://static.staticwars.com/quaggans/{response[quagganSelectionInt]}.jpg")
+
+@bot.command(hidden=True)
+async def raidEvent(ctx, wing_list):
+  user = ctx.author
+  roles = user.roles
+  for role in roles:
+    if role.Permissions.administrator:
+      # Find next wednesday
+      start_date=next_wednesday(datetime.datetime.now().astimezone())
+      start_date=start_date.replace(hour=19, minute=0)
+      end_date=start_date.replace(hour=22)
+      raid_channel = discord.utils.get(ctx.guild.channels, name="Raiding")
+      raid_schedule_channel=discord.utils.get(ctx.guild.channels, name="raid-scheduling")
+
+      #Get CoM and Emboldened
+      week_num = start_date.isocalendar()[1]
+      com, emb = get_com_emboldened(week_num)
+
+      event_description=(f'Karka Council Raidsday Agenda:'
+        f'\nRaids: {wing_list}'
+        f'\nCall of the Mists: {com}'
+        f'\nEmboldened: {emb}'
+      )
+
+      raid_event = await ctx.guild.create_scheduled_event(
+        name="Raidsday", 
+        start_time=start_date,
+        privacy_level="GUILD_ONLY",
+        channel=raid_channel,
+        end_time=end_date, 
+        description=event_description, 
+        reason=None
+      )
+
+      await raid_schedule_channel.send(raid_event.url)
+
 
 @bot.command(hidden=True, aliases=['defMessage'])
 async def defenseMessage(ctx):
@@ -61,7 +143,6 @@ async def on_member_join(member):
   guild = member.guild
   await guild.system_channel.send(kbc.NEWMEMBERMESSAGE.format(member, guild))
 
-
 class KarkaHelpCommand(commands.MinimalHelpCommand):
   async def send_pages(self):
     destination = self.get_destination()
@@ -72,7 +153,9 @@ class KarkaHelpCommand(commands.MinimalHelpCommand):
 
 bot.help_command = KarkaHelpCommand(no_category = 'General')
 
-for extension in initial_extensions:
-  bot.load_extension(extension)
+async def setup():
+  for extension in initial_extensions:
+    await bot.load_extension(extension)
 
+asyncio.run(setup())
 bot.run(config('TOKEN'))
