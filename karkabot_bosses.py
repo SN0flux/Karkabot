@@ -207,5 +207,5 @@ class Raid_Bosses(commands.Cog):
     """Xera Tanking Map"""
     await ctx.send(kbc.XERATANK)
 
-def setup(bot):
-  bot.add_cog(Raid_Bosses(bot))
+async def setup(bot):
+  await bot.add_cog(Raid_Bosses(bot))

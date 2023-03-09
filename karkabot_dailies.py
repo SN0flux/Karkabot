@@ -71,8 +71,8 @@ class Dailies(commands.Cog):
     dailyEmbed.add_field(name="Fractals", value='\n'.join(finalFractalList),inline=False)
     await ctx.send(embed=dailyEmbed)
 
-def setup(bot):
-  bot.add_cog(Dailies(bot))
+async def setup(bot):
+  await bot.add_cog(Dailies(bot))
 
 def getPVEAchievements(pveJson):
   achievementList = []
@@ -117,3 +117,4 @@ def retrieveAchievements(achievementList):
       if k == "name":
         translatedAchievementList.append(v)
   return translatedAchievementList
+
